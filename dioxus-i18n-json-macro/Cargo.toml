@@ -7,6 +7,7 @@ description = "Proc-macro for generating typed translation keys for dioxus-i18n-
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/eftech93/dioxus-i18n"
 documentation = "https://eftech93.github.io/dioxus-i18n"
+readme = "../README.md"
 
 [lib]
 proc-macro = true

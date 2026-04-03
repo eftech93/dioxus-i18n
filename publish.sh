@@ -15,15 +15,15 @@ cargo test --workspace
 
 echo "📦 Publishing dioxus-i18n-json-macro..."
 cd "$SCRIPT_DIR/dioxus-i18n-json-macro"
-cargo publish --dry-run
-cargo publish
+cargo publish --dry-run --allow-dirty
+cargo publish --allow-dirty
 
 echo "⏳ Waiting for crates.io to index the macro crate..."
 sleep 45
 
 echo "📦 Publishing dioxus-i18n-json..."
 cd "$SCRIPT_DIR/dioxus-i18n-json"
-cargo publish --dry-run
-cargo publish
+cargo publish --dry-run --allow-dirty
+cargo publish --allow-dirty
 
 echo "✅ Both crates published successfully!"

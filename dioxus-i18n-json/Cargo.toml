@@ -7,6 +7,7 @@ description = "A lightweight i18n library for Dioxus with JSON-based translation
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/eftech93/dioxus-i18n"
 documentation = "https://eftech93.github.io/dioxus-i18n"
+readme = "../README.md"
 
 [features]
 default = []
@@ -14,7 +15,7 @@ hot-reload = ["notify", "tokio"]
 
 [dependencies]
 dioxus = "0.6"
-dioxus-i18n-json-macro = { path = "../dioxus-i18n-json-macro" }
+dioxus-i18n-json-macro = { version = "0.0.1", path = "../dioxus-i18n-json-macro" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = "0.4"
