@@ -6,6 +6,7 @@ authors = ["Esteban Puello <eftech93@gmail.com>"]
 description = "A lightweight i18n library for Dioxus with JSON-based translations, hot reload, and typed keys."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/eftech93/dioxus-i18n"
+documentation = "https://eftech93.github.io/dioxus-i18n"
 
 [features]
 default = []

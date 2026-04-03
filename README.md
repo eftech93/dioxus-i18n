@@ -5,6 +5,8 @@ with JSON-based translations, hot-reload, typed keys, and component wrappers.
 
 Created by [Esteban Puello](mailto:eftech93@gmail.com).
 
+📚 **Documentation:** [https://eftech93.github.io/dioxus-i18n](https://eftech93.github.io/dioxus-i18n)
+
 ## Why `dioxus-i18n-json`?
 
 The simpler `dioxus-i18n` name was already taken on crates.io. This crate emphasizes its JSON-first approach to translations, along with typed keys, hot-reload, and component wrappers.
