@@ -1,6 +1,6 @@
 [package]
 name = "dioxus-i18n-json"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 authors = ["Esteban Puello <eftech93@gmail.com>"]
 description = "A lightweight i18n library for Dioxus with JSON-based translations, hot reload, and typed keys."
@@ -15,7 +15,7 @@ hot-reload = ["notify", "tokio"]
 
 [dependencies]
 dioxus = "0.6"
-dioxus-i18n-json-macro = { version = "0.0.1", path = "../dioxus-i18n-json-macro" }
+dioxus-i18n-json-macro = { version = "0.0.2", path = "../dioxus-i18n-json-macro" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = "0.4"
