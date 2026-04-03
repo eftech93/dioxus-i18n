@@ -190,10 +190,7 @@ fn safe_ident(name: &str) -> syn::Ident {
         return syn::Ident::new("_empty", proc_macro2::Span::call_site());
     }
     if name.chars().next().unwrap().is_ascii_digit() {
-        return syn::Ident::new(
-            &format!("_{}", name),
-            proc_macro2::Span::call_site(),
-        );
+        return syn::Ident::new(&format!("_{}", name), proc_macro2::Span::call_site());
     }
     syn::Ident::new_raw(name, proc_macro2::Span::call_site())
 }
