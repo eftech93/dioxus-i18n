@@ -1,0 +1,9 @@
+{
+  "title": "dioxus-i18n on the Web",
+  "intro": "This example runs in the browser.",
+  "switch": {
+    "label": "Current language: {lang}",
+    "en": "English",
+    "ja": "Japanese"
+  }
+}

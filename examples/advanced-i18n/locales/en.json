@@ -1,0 +1,38 @@
+{
+  "app": {
+    "title": "Advanced i18n Demo",
+    "subtitle": "Built with <0>dioxus-i18n</0> and <1>Rust</1>."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread": {
+      "zero": "You have no unread notifications.",
+      "one": "You have <0>{count} unread notification</0>.",
+      "other": "You have <0>{count} unread notifications</0>."
+    }
+  },
+  "profile": {
+    "greeting": "Hello, {name}! Your account was created on {date}.",
+    "stats": {
+      "followers": {
+        "one": "{count} follower",
+        "other": "{count} followers"
+      },
+      "following": {
+        "one": "{count} following",
+        "other": "{count} followings"
+      }
+    }
+  },
+  "cta": {
+    "save": "Save changes",
+    "discard": "Discard"
+  },
+  "footer": {
+    "copyright": "© {year} <0>My Company</0>. All rights reserved.",
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    }
+  }
+}

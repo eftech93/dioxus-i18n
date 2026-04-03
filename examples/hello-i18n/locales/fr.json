@@ -1,0 +1,12 @@
+{
+  "greeting": "Bonjour, {name} !",
+  "messages": {
+    "welcome": "Bienvenue sur dioxus-i18n.",
+    "description": "Essayez de modifier ce fichier pendant que l'application est en cours d'exécution — le texte sera mis à jour automatiquement."
+  },
+  "itemCount": {
+    "one": "Vous avez {count} article.",
+    "other": "Vous avez {count} articles."
+  },
+  "terms": "Lisez nos <0>Conditions d'Utilisation</0>."
+}

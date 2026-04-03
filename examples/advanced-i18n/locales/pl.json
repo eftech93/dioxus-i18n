@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Zaawansowane demo i18n",
+    "subtitle": "Zbudowane z <0>dioxus-i18n</0> i <1>Rust</1>."
+  },
+  "notifications": {
+    "title": "Powiadomienia",
+    "unread": {
+      "one": "Masz <0>{count} nieprzeczytane powiadomienie</0>.",
+      "few": "Masz <0>{count} nieprzeczytane powiadomienia</0>.",
+      "many": "Masz <0>{count} nieprzeczytanych powiadomień</0>.",
+      "other": "Masz <0>{count} nieprzeczytanych powiadomień</0>."
+    }
+  },
+  "profile": {
+    "greeting": "Cześć, {name}! Twoje konto zostało utworzone {date}.",
+    "stats": {
+      "followers": {
+        "one": "{count} obserwujący",
+        "few": "{count} obserwujących",
+        "many": "{count} obserwujących",
+        "other": "{count} obserwujących"
+      },
+      "following": {
+        "one": "{count} obserwowany",
+        "few": "{count} obserwowanych",
+        "many": "{count} obserwowanych",
+        "other": "{count} obserwowanych"
+      }
+    }
+  },
+  "cta": {
+    "save": "Zapisz zmiany",
+    "discard": "Odrzuć"
+   },
+  "footer": {
+    "copyright": "© {year} <0>Moja Firma</0>. Wszelkie prawa zastrzeżone.",
+    "links": {
+      "privacy": "Polityka prywatności",
+      "terms": "Regulamin"
+    }
+  }
+}

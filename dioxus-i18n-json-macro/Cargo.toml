@@ -1,0 +1,17 @@
+[package]
+name = "dioxus-i18n-json-macro"
+version = "0.0.1"
+edition = "2021"
+authors = ["Esteban Puello <eftech93@gmail.com>"]
+description = "Proc-macro for generating typed translation keys for dioxus-i18n-json."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/eftech93/dioxus-i18n"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = { version = "2.0", features = ["parsing"] }
+serde_json = "1.0"

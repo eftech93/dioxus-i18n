@@ -1,0 +1,24 @@
+[package]
+name = "dioxus-i18n-json"
+version = "0.0.1"
+edition = "2021"
+authors = ["Esteban Puello <eftech93@gmail.com>"]
+description = "A lightweight i18n library for Dioxus with JSON-based translations, hot reload, and typed keys."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/eftech93/dioxus-i18n"
+
+[features]
+default = []
+hot-reload = ["notify", "tokio"]
+
+[dependencies]
+dioxus = "0.6"
+dioxus-i18n-json-macro = { path = "../dioxus-i18n-json-macro" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+log = "0.4"
+icu_plurals = "2.2"
+icu_locale = "2.2"
+
+notify = { version = "6.1", optional = true }
+tokio = { version = "1.40", features = ["rt-multi-thread", "time"], optional = true }

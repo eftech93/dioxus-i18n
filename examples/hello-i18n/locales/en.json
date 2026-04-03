@@ -1,0 +1,12 @@
+{
+  "greeting": "Hello, {name}!",
+  "messages": {
+    "welcome": "Welcome to dioxus-i18n.",
+    "description": "Try editing this file while the app is running — the text will update automatically."
+  },
+  "itemCount": {
+    "one": "You have {count} item.",
+    "other": "You have {count} items."
+  },
+  "terms": "Read our <0>Terms of Service</0>."
+}

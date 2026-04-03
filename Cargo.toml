@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "dioxus-i18n-json",
+    "dioxus-i18n-json-macro",
+    "examples/hello-i18n",
+    "examples/minimal-i18n",
+    "examples/web-i18n",
+    "examples/advanced-i18n",
+]
+resolver = "2"
