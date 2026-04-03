@@ -47,14 +47,14 @@ dioxus-i18n-json/
 
 ```toml
 [dependencies]
-dioxus-i18n-json = "0.1"
+dioxus-i18n-json = "0.0.2"
 ```
 
 For development hot-reload (desktop only):
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.1", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.2", features = ["hot-reload"] }
 ```
 
 ### 2. Create locale files

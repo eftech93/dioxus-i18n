@@ -45,14 +45,14 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = "0.1"
+dioxus-i18n-json = "0.0.2"
 ```
 
 For desktop hot-reload during development:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.1", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.2", features = ["hot-reload"] }
 ```
 
 ## Next Steps

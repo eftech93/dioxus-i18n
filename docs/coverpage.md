@@ -1,7 +1,6 @@
-
 # dioxus-i18n-json
 
-> A lightweight, reactive internationalization library for Dioxus.
+> **A lightweight, reactive internationalization library for Dioxus.**
 
 - 🌍 JSON-based translations
 - 🔢 CLDR plurals & string interpolation
@@ -9,5 +8,7 @@
 - ⌨️ Compile-time typed keys
 - ♻️ Desktop hot-reload support
 
-[Get Started](getting-started.md)
+[Get Started](#main)
 [GitHub](https://github.com/eftech93/dioxus-i18n)
+
+![color](#3f5167)
