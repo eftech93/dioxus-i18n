@@ -13,6 +13,11 @@
 - ♻️ **Hot reload** — Edit locale files while the desktop app runs and see changes instantly.
 - ⚡ **Reactive** — Locale changes trigger Dioxus signals, so the UI re-renders automatically.
 
+## What's New in 0.0.3
+
+- **Robust `generate_keys!` macro** — The proc-macro now safely handles edge-case JSON keys, including special characters (`-`, `.`, spaces), duplicate identifiers, and empty/underscore-only keys.
+- **Fixed Docsify site** — Documentation now renders correctly on GitHub Pages with a styled coverpage.
+
 ## Quick Example
 
 ```rust
@@ -45,14 +50,14 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = "0.0.2"
+dioxus-i18n-json = "0.0.3"
 ```
 
 For desktop hot-reload during development:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.0.2", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.3", features = ["hot-reload"] }
 ```
 
 ## Next Steps

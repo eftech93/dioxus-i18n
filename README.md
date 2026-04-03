@@ -41,20 +41,25 @@ dioxus-i18n-json/
     └── advanced-i18n/    # Complex demo with plurals, Trans, and hot-reload
 ```
 
+## What's New in 0.0.3
+
+- **Robust `generate_keys!` macro** — The proc-macro now safely handles edge-case JSON keys, including special characters (`-`, `.`, spaces), duplicate identifiers, and empty/underscore-only keys.
+- **Fixed Docsify site** — Documentation now renders correctly on GitHub Pages with a styled coverpage.
+
 ## Quick start
 
 ### 1. Add the dependency
 
 ```toml
 [dependencies]
-dioxus-i18n-json = "0.0.2"
+dioxus-i18n-json = "0.0.3"
 ```
 
 For development hot-reload (desktop only):
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.0.2", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.3", features = ["hot-reload"] }
 ```
 
 ### 2. Create locale files
@@ -157,7 +162,7 @@ A one-key example to see the bare minimum needed to get started.
 
 ### `web-i18n` – browser target
 ```bash
-# Serve with the Dioxus CLI
+# Serve with the Dioxus CLI (do NOT use `cargo run` for web targets)
 dx serve -p web-i18n
 ```
 Demonstrates the same API running in a web app.

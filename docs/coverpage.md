@@ -1,6 +1,8 @@
 # dioxus-i18n-json
 
 > **A lightweight, reactive internationalization library for Dioxus.**
+> 
+> v0.0.3
 
 - 🌍 JSON-based translations
 - 🔢 CLDR plurals & string interpolation

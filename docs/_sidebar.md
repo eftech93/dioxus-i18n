@@ -7,3 +7,4 @@
 - [Examples](examples.md)
 - [Web / WASM](web.md)
 - [Hot Reload](hot-reload.md)
+- [Changelog](changelog.md)

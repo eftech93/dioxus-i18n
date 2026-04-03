@@ -1,5 +1,6 @@
 use proc_macro::TokenStream;
 use quote::quote;
+use std::collections::HashSet;
 use syn::{parse_macro_input, LitStr};
 
 /// Generate a `keys` module containing typed translation keys from a JSON locale file.
@@ -37,7 +38,7 @@ pub fn generate_keys(input: TokenStream) -> TokenStream {
         }
     };
 
-    let keys_module = generate_value(&value, "keys", "");
+    let keys_module = generate_value(&value, "keys", "", &mut HashSet::new());
     quote! {
         #keys_module
     }
@@ -56,7 +57,12 @@ fn is_plural_object(obj: &serde_json::Map<String, serde_json::Value>) -> bool {
     })
 }
 
-fn generate_value(value: &serde_json::Value, name: &str, prefix: &str) -> proc_macro2::TokenStream {
+fn generate_value(
+    value: &serde_json::Value,
+    name: &str,
+    prefix: &str,
+    used: &mut HashSet<String>,
+) -> proc_macro2::TokenStream {
     match value {
         serde_json::Value::Object(obj) => {
             if is_plural_object(obj) {
@@ -65,22 +71,29 @@ fn generate_value(value: &serde_json::Value, name: &str, prefix: &str) -> proc_m
             }
 
             let ident = safe_ident(name);
+            let mut local_used = HashSet::new();
             let items: Vec<_> = obj
                 .iter()
                 .map(|(k, v)| {
-                    let sanitized = sanitize_ident(k);
+                    let mut sanitized = sanitize_ident(k);
+                    if sanitized.is_empty() || sanitized == "_" {
+                        sanitized = format!("_{}", hash_key(k));
+                    }
                     let full_key = if prefix.is_empty() {
                         k.clone()
                     } else {
                         format!("{}.{}", prefix, k)
                     };
                     if v.is_object() && is_plural_object(v.as_object().unwrap()) {
-                        let const_ident = safe_ident(&sanitized);
+                        let unique = unique_ident(&mut local_used, &sanitized);
+                        let const_ident = safe_ident(&unique);
                         quote! { pub const #const_ident: &str = #full_key; }
                     } else if v.is_object() || v.is_array() {
-                        generate_value(v, &sanitized, &full_key)
+                        let unique = unique_ident(&mut local_used, &sanitized);
+                        generate_value(v, &unique, &full_key, used)
                     } else {
-                        let const_ident = safe_ident(&sanitized);
+                        let unique = unique_ident(&mut local_used, &sanitized);
+                        let const_ident = safe_ident(&unique);
                         quote! { pub const #const_ident: &str = #full_key; }
                     }
                 })
@@ -93,6 +106,7 @@ fn generate_value(value: &serde_json::Value, name: &str, prefix: &str) -> proc_m
         }
         serde_json::Value::Array(arr) => {
             let ident = safe_ident(name);
+            let mut local_used = HashSet::new();
             let items: Vec<_> = arr
                 .iter()
                 .enumerate()
@@ -100,12 +114,15 @@ fn generate_value(value: &serde_json::Value, name: &str, prefix: &str) -> proc_m
                     let idx_name = format!("_{}", i);
                     let full_key = format!("{}[{}]", prefix, i);
                     if v.is_object() && is_plural_object(v.as_object().unwrap()) {
-                        let const_ident = safe_ident(&idx_name);
+                        let unique = unique_ident(&mut local_used, &idx_name);
+                        let const_ident = safe_ident(&unique);
                         quote! { pub const #const_ident: &str = #full_key; }
                     } else if v.is_object() || v.is_array() {
-                        generate_value(v, &idx_name, &full_key)
+                        let unique = unique_ident(&mut local_used, &idx_name);
+                        generate_value(v, &unique, &full_key, used)
                     } else {
-                        let const_ident = safe_ident(&idx_name);
+                        let unique = unique_ident(&mut local_used, &idx_name);
+                        let const_ident = safe_ident(&unique);
                         quote! { pub const #const_ident: &str = #full_key; }
                     }
                 })
@@ -124,6 +141,30 @@ fn generate_value(value: &serde_json::Value, name: &str, prefix: &str) -> proc_m
     }
 }
 
+fn unique_ident(used: &mut HashSet<String>, base: &str) -> String {
+    if !used.contains(base) {
+        used.insert(base.to_string());
+        return base.to_string();
+    }
+    let mut i = 2;
+    loop {
+        let candidate = format!("{}_{}", base, i);
+        if !used.contains(&candidate) {
+            used.insert(candidate.clone());
+            return candidate;
+        }
+        i += 1;
+    }
+}
+
+fn hash_key(key: &str) -> u64 {
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+    let mut s = DefaultHasher::new();
+    key.hash(&mut s);
+    s.finish()
+}
+
 fn sanitize_ident(raw: &str) -> String {
     raw.chars()
         .map(|c| {
@@ -137,11 +178,22 @@ fn sanitize_ident(raw: &str) -> String {
 }
 
 fn safe_ident(name: &str) -> syn::Ident {
-    if syn::parse_str::<syn::Ident>(name).is_ok() {
-        syn::Ident::new(name, proc_macro2::Span::call_site())
-    } else if !name.is_empty() && name.chars().next().unwrap().is_ascii_digit() {
-        syn::Ident::new(&format!("_{}", name), proc_macro2::Span::call_site())
-    } else {
-        syn::Ident::new_raw(name, proc_macro2::Span::call_site())
+    // Try as a normal identifier first
+    if let Ok(ident) = syn::parse_str::<syn::Ident>(name) {
+        // syn::parse_str accepts "_" but Ident::new panics on it.
+        // We already filter out "_" before calling safe_ident, but guard anyway.
+        if name != "_" {
+            return ident;
+        }
     }
+    if name.is_empty() {
+        return syn::Ident::new("_empty", proc_macro2::Span::call_site());
+    }
+    if name.chars().next().unwrap().is_ascii_digit() {
+        return syn::Ident::new(
+            &format!("_{}", name),
+            proc_macro2::Span::call_site(),
+        );
+    }
+    syn::Ident::new_raw(name, proc_macro2::Span::call_site())
 }

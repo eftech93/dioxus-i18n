@@ -35,11 +35,16 @@ Everything else — `use_t`, `tp`, `tf`, `Trans`, `generate_keys!` — works exa
 
 ## Running the web example
 
+> ⚠️ **Do not use `cargo run` for web examples.** Web targets compile to WebAssembly and must be served with the Dioxus CLI.
+
 ```bash
+cd /Users/tebo1993/Desktop/EFTECH93/dioxus-i18n
 dx serve -p web-i18n
 ```
 
 Then open `http://localhost:8080`.
+
+If you see `cannot call wasm-bindgen imported functions on non-wasm targets`, it means you accidentally ran `cargo run` instead of `dx serve`.
 
 If port 8080 is busy, specify another one:
 

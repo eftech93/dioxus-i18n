@@ -7,14 +7,14 @@ This guide walks you through adding `dioxus-i18n-json` to a new or existing Diox
 ```toml
 [dependencies]
 dioxus = "0.6"
-dioxus-i18n-json = "0.0.2"
+dioxus-i18n-json = "0.0.3"
 ```
 
 If you want hot-reload on desktop:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.0.2", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.3", features = ["hot-reload"] }
 ```
 
 ## 2. Create locale files

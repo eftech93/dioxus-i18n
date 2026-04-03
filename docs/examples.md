@@ -38,6 +38,8 @@ cargo run -p hello-i18n
 
 A browser-targeted example using `include_str!` to embed translations.
 
+> ⚠️ **Do not use `cargo run` for web examples.** You must use the Dioxus CLI so the app compiles to WebAssembly.
+
 ```bash
 dx serve -p web-i18n
 ```

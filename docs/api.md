@@ -158,6 +158,11 @@ keys::greeting
 keys::messages::welcome
 ```
 
+The macro handles edge-case keys gracefully:
+- Special characters are sanitized to valid Rust identifiers.
+- Duplicate normalized names are automatically deduplicated (`_2`, `_3`, etc.).
+- Empty or underscore-only keys receive stable hashed fallbacks.
+
 ---
 
 ### `parse_translation_json`

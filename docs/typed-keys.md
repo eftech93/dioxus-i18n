@@ -63,6 +63,14 @@ t(keys::messages::welcome); // still valid
 
 But remember: `use_t_ns` auto-prefixes the key, so if you already have the fully-qualified constant, you usually want `use_t()` instead.
 
+## Edge cases handled automatically
+
+The macro is designed to be resilient against real-world JSON keys:
+
+- **Special characters** — Keys like `foo-bar`, `foo.bar`, or `foo bar` are sanitized to valid Rust identifiers.
+- **Duplicates** — If two different keys normalize to the same identifier (e.g. `foo-bar` and `foo_bar` both become `foo_bar`), the second one is renamed `foo_bar_2`, the third `foo_bar_3`, etc.
+- **Empty or underscore-only keys** — These receive a stable hashed fallback name so the macro never panics.
+
 ## Zero runtime cost
 
 The macro only generates `&str` constants. The final binary is identical to using raw string literals.

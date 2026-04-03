@@ -10,7 +10,7 @@ Add the feature to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.0.2", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.3", features = ["hot-reload"] }
 ```
 
 ## How it works
