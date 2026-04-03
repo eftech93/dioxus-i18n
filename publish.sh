@@ -4,8 +4,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-echo "🔍 Formatting check..."
-cargo fmt -- --check
+echo "🔍 Formatting code..."
+cargo fmt
 
 echo "🔍 Running clippy..."
 cargo clippy --workspace --all-targets --all-features

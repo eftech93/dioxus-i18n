@@ -30,15 +30,15 @@ impl I18n {
             .get(locale.as_str())
             .and_then(|t| match t.get(key)? {
                 TranslationValue::String(s) => Some(s.clone()),
-                TranslationValue::Plural(pf) => {
-                    pf.other.clone().or_else(|| {
-                        pf.one.clone().or_else(|| {
-                            pf.few.clone().or_else(|| {
-                                pf.many.clone().or_else(|| pf.two.clone().or_else(|| pf.zero.clone()))
-                            })
+                TranslationValue::Plural(pf) => pf.other.clone().or_else(|| {
+                    pf.one.clone().or_else(|| {
+                        pf.few.clone().or_else(|| {
+                            pf.many
+                                .clone()
+                                .or_else(|| pf.two.clone().or_else(|| pf.zero.clone()))
                         })
                     })
-                }
+                }),
             })
             .unwrap_or_else(|| key.to_string())
     }
@@ -123,10 +123,13 @@ fn plural_category(locale: &str, count: i64) -> &'static str {
     use icu_plurals::{PluralCategory, PluralRuleType, PluralRules};
 
     let loc: Locale = locale.parse().unwrap_or_else(|_| icu_locale::locale!("en"));
-    let rules = PluralRules::try_new(loc.into(), PluralRuleType::Cardinal.into())
-        .unwrap_or_else(|_| {
-            PluralRules::try_new(icu_locale::locale!("en").into(), PluralRuleType::Cardinal.into())
-                .expect("en data present")
+    let rules =
+        PluralRules::try_new(loc.into(), PluralRuleType::Cardinal.into()).unwrap_or_else(|_| {
+            PluralRules::try_new(
+                icu_locale::locale!("en").into(),
+                PluralRuleType::Cardinal.into(),
+            )
+            .expect("en data present")
         });
 
     match rules.category_for(count) {
@@ -170,7 +173,10 @@ pub fn I18nProvider(children: Element, config: I18nConfig) -> Element {
     let locale = use_signal(|| config.default_locale.clone());
     let translations = use_signal(|| initial);
 
-    let i18n = I18n { locale, translations };
+    let i18n = I18n {
+        locale,
+        translations,
+    };
     use_context_provider(|| i18n);
 
     #[cfg(feature = "hot-reload")]
@@ -226,7 +232,11 @@ where
 /// let UseI18n { t, tp, tf } = use_t();
 /// let welcome = t("messages.welcome");
 /// ```
-pub fn use_t() -> UseI18n<impl Fn(&str) -> String + Copy, impl Fn(&str, i64) -> String + Copy, impl Fn(&str, &[(&str, &str)]) -> String + Copy> {
+pub fn use_t() -> UseI18n<
+    impl Fn(&str) -> String + Copy,
+    impl Fn(&str, i64) -> String + Copy,
+    impl Fn(&str, &[(&str, &str)]) -> String + Copy,
+> {
     let i18n = use_context::<I18n>();
     UseI18n {
         t: move |key| i18n.t(key),
@@ -244,7 +254,13 @@ pub fn use_t() -> UseI18n<impl Fn(&str) -> String + Copy, impl Fn(&str, i64) -> 
 /// let UseI18n { t, tp, tf } = use_t_ns("messages");
 /// let welcome = t("welcome"); // resolves to "messages.welcome"
 /// ```
-pub fn use_t_ns(ns: &'static str) -> UseI18n<impl Fn(&str) -> String + Copy, impl Fn(&str, i64) -> String + Copy, impl Fn(&str, &[(&str, &str)]) -> String + Copy> {
+pub fn use_t_ns(
+    ns: &'static str,
+) -> UseI18n<
+    impl Fn(&str) -> String + Copy,
+    impl Fn(&str, i64) -> String + Copy,
+    impl Fn(&str, &[(&str, &str)]) -> String + Copy,
+> {
     let i18n = use_context::<I18n>();
     UseI18n {
         t: move |key| i18n.t(&format!("{}.{}", ns, key)),
@@ -328,10 +344,7 @@ mod tests {
             interpolate("{a} and {b}", &[("a", "1"), ("b", "2")]),
             "1 and 2"
         );
-        assert_eq!(
-            interpolate("No placeholders", &[]),
-            "No placeholders"
-        );
+        assert_eq!(interpolate("No placeholders", &[]), "No placeholders");
     }
 
     #[test]

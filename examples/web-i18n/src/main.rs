@@ -1,5 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_i18n_json::{generate_keys, I18nConfig, I18nProvider, parse_translation_json, use_i18n, use_t, UseI18n};
+use dioxus_i18n_json::{
+    generate_keys, parse_translation_json, use_i18n, use_t, I18nConfig, I18nProvider, UseI18n,
+};
 use std::collections::HashMap;
 
 generate_keys!("examples/web-i18n/locales/en.json");

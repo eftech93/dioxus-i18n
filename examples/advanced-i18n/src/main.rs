@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_i18n_json::{generate_keys, I18nConfig, I18nProvider, Trans, use_i18n, use_t, UseI18n};
+use dioxus_i18n_json::{generate_keys, use_i18n, use_t, I18nConfig, I18nProvider, Trans, UseI18n};
 
 generate_keys!("examples/advanced-i18n/locales/en.json");
 

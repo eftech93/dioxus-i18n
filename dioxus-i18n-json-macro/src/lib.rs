@@ -49,7 +49,10 @@ fn is_plural_object(obj: &serde_json::Map<String, serde_json::Value>) -> bool {
         return false;
     }
     obj.keys().all(|k| {
-        matches!(k.as_str(), "zero" | "one" | "two" | "few" | "many" | "other")
+        matches!(
+            k.as_str(),
+            "zero" | "one" | "two" | "few" | "many" | "other"
+        )
     })
 }
 

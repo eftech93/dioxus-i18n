@@ -1,5 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_i18n_json::{generate_keys, I18nConfig, I18nProvider, Trans, use_i18n, use_t, use_t_ns, UseI18n};
+use dioxus_i18n_json::{
+    generate_keys, use_i18n, use_t, use_t_ns, I18nConfig, I18nProvider, Trans, UseI18n,
+};
 
 // Generate typed keys at compile time from the reference locale file.
 generate_keys!("examples/hello-i18n/locales/en.json");
