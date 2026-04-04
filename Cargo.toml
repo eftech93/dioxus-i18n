@@ -18,5 +18,3 @@ repository = "https://github.com/eftech93/dioxus-i18n"
 documentation = "https://eftech93.github.io/dioxus-i18n"
 
 [workspace.dependencies]
-dioxus-i18n-json = { path = "dioxus-i18n-json" }
-dioxus-i18n-json-macro = { path = "dioxus-i18n-json-macro" }

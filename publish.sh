@@ -17,19 +17,17 @@ echo "📦 Verifying dioxus-i18n-json-macro..."
 cd "$SCRIPT_DIR/dioxus-i18n-json-macro"
 cargo publish --dry-run --allow-dirty
 
-echo "📦 Verifying dioxus-i18n-json..."
-cd "$SCRIPT_DIR/dioxus-i18n-json"
-cargo publish --dry-run --allow-dirty
-
 echo "📦 Publishing dioxus-i18n-json-macro..."
-cd "$SCRIPT_DIR/dioxus-i18n-json-macro"
 cargo publish --allow-dirty
 
 echo "⏳ Waiting for crates.io to index the macro crate..."
 sleep 45
 
-echo "📦 Publishing dioxus-i18n-json..."
+echo "📦 Verifying dioxus-i18n-json..."
 cd "$SCRIPT_DIR/dioxus-i18n-json"
+cargo publish --dry-run --allow-dirty
+
+echo "📦 Publishing dioxus-i18n-json..."
 cargo publish --allow-dirty
 
 echo "✅ Both crates published successfully!"
