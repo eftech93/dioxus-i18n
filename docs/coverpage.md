@@ -13,4 +13,4 @@
 [Get Started](#main)
 [GitHub](https://github.com/eftech93/dioxus-i18n)
 
-![color](#3f5167)
+![color](#9D6B4C)

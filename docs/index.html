@@ -6,26 +6,485 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="A lightweight internationalization library for Dioxus">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="stylesheet" href="slyte.css" />
+  <style>
+    :root {
+      --saffron_mango: #DEC647;
+      --pinkish_tan: #C9A38D;
+      --brownish: #9D6B4C;
+      --judge-gray: #534339;
+      --white: #FFFCF3;
+      --background-color: var(--judge-gray);
+      --cover-text-color: var(--white);
+      --cover-background-color: var(--brownish);
+    }
+
+    /* ─── Global text ─── */
+    body {
+      color: var(--white);
+    }
+
+    /* ─── Sidebar ─── */
+    .sidebar {
+      color: var(--white);
+    }
+
+    .sidebar ul li a {
+      color: var(--white);
+    }
+
+    .sidebar ul li a:hover {
+      color: var(--saffron_mango);
+      text-decoration: none;
+    }
+
+    .sidebar ul li.active > a {
+      color: var(--saffron_mango);
+      border-right: 3px solid var(--saffron_mango);
+    }
+
+    .app-name-link img {
+      max-height: 40px;
+    }
+
+    /* ─── Content ─── */
+    .markdown-section h1,
+    .markdown-section h2,
+    .markdown-section h3,
+    .markdown-section h4,
+    .markdown-section h5,
+    .markdown-section h6 {
+      color: var(--white);
+    }
+
+    .markdown-section strong,
+    .markdown-section b {
+      color: var(--saffron_mango);
+    }
+
+    .markdown-section a {
+      color: var(--saffron_mango);
+      font-weight: 600;
+    }
+
+    .markdown-section a:hover {
+      color: var(--white);
+    }
+
+    .markdown-section em {
+      color: var(--pinkish_tan);
+    }
+
+    .markdown-section hr {
+      border-bottom: 1px solid rgba(222, 198, 71, 0.2);
+    }
+
+    .markdown-section iframe {
+      border: 1px solid rgba(222, 198, 71, 0.2);
+    }
+
+    .markdown-section blockquote {
+      border-left: 4px solid var(--saffron_mango);
+      color: var(--white);
+      background-color: rgba(222, 198, 71, 0.05);
+    }
+
+    /* ─── Code ─── */
+    .markdown-section code {
+      background-color: rgba(0, 0, 0, 0.25);
+      color: var(--saffron_mango);
+    }
+
+    .markdown-section pre {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+
+    .markdown-section pre > code {
+      background-color: transparent;
+      color: var(--white);
+    }
+
+    .docsify-copy-code-button {
+      background-color: var(--saffron_mango) !important;
+      color: var(--judge-gray) !important;
+    }
+
+    /* ─── Tables ─── */
+    .markdown-section table tr:nth-child(2n) {
+      background-color: rgba(222, 198, 71, 0.1);
+    }
+
+    .markdown-section table tr:nth-child(2n+1) {
+      background-color: transparent;
+    }
+
+    .markdown-section table tr:hover {
+      background-color: rgba(222, 198, 71, 0.25);
+    }
+
+    .markdown-section table th {
+      background-color: var(--saffron_mango);
+      color: var(--judge-gray);
+      font-weight: bold;
+      border: 1px solid var(--brownish);
+      padding: 10px;
+    }
+
+    .markdown-section table td {
+      border: 1px solid rgba(222, 198, 71, 0.3);
+      padding: 10px;
+      color: var(--white);
+    }
+
+    .markdown-section table tr {
+      border-top: 1px solid rgba(222, 198, 71, 0.2);
+    }
+
+    /* ─── Tips / Warnings ─── */
+    .markdown-section p.tip {
+      background-color: rgba(222, 198, 71, 0.08);
+      border-left-color: var(--saffron_mango);
+    }
+
+    .markdown-section p.tip:before {
+      background-color: var(--saffron_mango);
+      color: var(--judge-gray);
+    }
+
+    .markdown-section p.tip code {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .markdown-section p.warn {
+      background: rgba(222, 198, 71, 0.1);
+    }
+
+    /* ─── Pagination ─── */
+    .pagination-item-label,
+    .pagination-item-title {
+      color: var(--saffron_mango);
+    }
+
+    /* ─── GitHub corner ─── */
+    .github-corner svg {
+      fill: var(--saffron_mango);
+      color: var(--background-color);
+    }
+
+    /* ─── Search ─── */
+    .search .search-keyword {
+      color: var(--saffron_mango);
+    }
+
+    .search a:hover {
+      color: var(--saffron_mango);
+    }
+
+    .search input {
+      background-color: rgba(0, 0, 0, 0.15);
+      color: var(--white);
+      border: 1px solid rgba(222, 198, 71, 0.2);
+    }
+
+    .search input::placeholder {
+      color: rgba(255, 252, 243, 0.5);
+    }
+
+    .search .results-panel {
+      background-color: var(--background-color);
+    }
+
+    .search .matching-post {
+      border-bottom: 1px solid rgba(222, 198, 71, 0.1);
+    }
+
+    /* ─── Coverpage ─── */
+    section.cover .cover-main > p:last-child a {
+      border-color: var(--saffron_mango) !important;
+      color: var(--saffron_mango) !important;
+    }
+
+    section.cover .cover-main > p:last-child a:last-child {
+      background-color: var(--saffron_mango) !important;
+      color: var(--judge-gray) !important;
+    }
+
+    section.cover .cover-main > p:last-child a:hover {
+      color: var(--white) !important;
+      opacity: 0.9;
+    }
+
+    .cover-main img {
+      max-height: 120px;
+    }
+
+    /* ─── Mermaid chart styling ─── */
+    .mermaid {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .mermaid .titleText,
+    .mermaid text.titleText,
+    .mermaid tspan.titleText {
+      fill: #DEC647 !important;
+      font-weight: bold !important;
+    }
+
+    .mermaid .nodeLabel,
+    .mermaid text.nodeLabel,
+    .mermaid .node text,
+    .mermaid text,
+    .mermaid tspan {
+      fill: #FFFCF3 !important;
+    }
+
+    .mermaid .sectionTitle,
+    .mermaid .timelineTitle {
+      fill: #DEC647 !important;
+      font-weight: bold !important;
+    }
+
+    .mermaid .node rect,
+    .mermaid .node circle,
+    .mermaid .node ellipse,
+    .mermaid .node polygon,
+    .mermaid .node path {
+      fill: #534339 !important;
+      stroke: #DEC647 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .section0,
+    .mermaid .section1,
+    .mermaid .section2,
+    .mermaid .section3 {
+      fill: #534339 !important;
+    }
+
+    .mermaid .section1,
+    .mermaid .section3 {
+      fill: #6b5748 !important;
+    }
+
+    .mermaid .timeline-line {
+      stroke: #DEC647 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .pieCircle {
+      stroke: #DEC647 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .pieTitleText {
+      fill: #DEC647 !important;
+      font-weight: bold !important;
+    }
+
+    .mermaid .slice {
+      stroke: #534339 !important;
+      stroke-width: 1px !important;
+    }
+
+    .mermaid .edgePath .path {
+      stroke: #DEC647 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .edgeLabel {
+      background-color: #534339 !important;
+      fill: #FFFCF3 !important;
+    }
+
+    .mermaid .task {
+      fill: #534339 !important;
+      stroke: #DEC647 !important;
+    }
+
+    .mermaid .taskText {
+      fill: #FFFCF3 !important;
+    }
+
+    .mermaid .today {
+      stroke: #DEC647 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .mindmap-node {
+      fill: #534339 !important;
+      stroke: #DEC647 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .mindmap-node text,
+    .mermaid .mindmap-node tspan {
+      fill: #FFFCF3 !important;
+      font-size: 14px !important;
+    }
+
+    .mermaid .mindmap-root {
+      fill: #DEC647 !important;
+      stroke: #534339 !important;
+      stroke-width: 3px !important;
+    }
+
+    .mermaid .mindmap-root text,
+    .mermaid .mindmap-root tspan {
+      fill: #534339 !important;
+      font-weight: bold !important;
+      font-size: 16px !important;
+    }
+
+    .mermaid .mindmap-link {
+      stroke: #DEC647 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .pie-sector {
+      stroke: #534339 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .pie-label {
+      fill: #FFFCF3 !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+    }
+
+    .mermaid .pie-title-text {
+      fill: #DEC647 !important;
+      font-size: 18px !important;
+      font-weight: bold !important;
+    }
+
+    .mermaid .flowchart-link {
+      stroke: #DEC647 !important;
+      stroke-width: 2px !important;
+    }
+
+    .mermaid .edgeLabel rect {
+      fill: #534339 !important;
+      stroke: #DEC647 !important;
+    }
+
+    .mermaid .edgeLabel text {
+      fill: #FFFCF3 !important;
+      font-size: 12px !important;
+    }
+
+    .mermaid .node .label {
+      color: #FFFCF3 !important;
+    }
+
+    .mermaid .node .label text {
+      fill: #FFFCF3 !important;
+      font-size: 14px !important;
+    }
+
+    .mermaid .cluster rect {
+      fill: rgba(222, 198, 71, 0.1) !important;
+      stroke: #DEC647 !important;
+      stroke-width: 1px !important;
+    }
+
+    .mermaid .cluster text {
+      fill: #DEC647 !important;
+      font-weight: bold !important;
+    }
+
+    /* ─── Print styles ─── */
+    @media print {
+      .sidebar,
+      .sidebar-toggle,
+      .docsify-copy-code-button,
+      .github-corner,
+      .app-nav {
+        display: none !important;
+      }
+
+      .content {
+        left: 0 !important;
+        margin-left: 0 !important;
+        max-width: 100% !important;
+      }
+
+      body {
+        overflow: visible !important;
+      }
+
+      .markdown-section {
+        max-width: 100% !important;
+        padding: 20px !important;
+      }
+    }
+  </style>
 </head>
 <body>
   <div id="app"></div>
+
+  <!-- Mermaid.js -->
+  <script src="//cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
   <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'default',
+      securityLevel: 'loose',
+      logLevel: 'error',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true },
+      pie: { useMaxWidth: true },
+      timeline: { useMaxWidth: true }
+    });
+
+    let num = 0;
+
     window.$docsify = {
       name: 'dioxus-i18n-json',
+      logo: 'logo.png',
+      themeColor: '#DEC647',
       repo: 'https://github.com/eftech93/dioxus-i18n',
       coverpage: 'coverpage.md',
       loadSidebar: true,
       subMaxLevel: 2,
       auto2top: true,
+      markdown: {
+        renderer: {
+          code: function (code, lang) {
+            if (lang === "mermaid") {
+              return '<div class="mermaid" id="mermaid-' + num++ + '">' + code + '</div>';
+            }
+            return this.origin.code.apply(this, arguments);
+          }
+        }
+      },
       search: {
         placeholder: 'Search',
         noData: 'No results.',
-      }
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.doneEach(function() {
+            mermaid.run({ querySelector: '.mermaid' }).catch(function(err) {
+              console.error('Mermaid rendering error:', err);
+            });
+          });
+        }
+      ]
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
-  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-rust.min.js"></script>
+
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-rust.min.js"></script>
 </body>
 </html>
