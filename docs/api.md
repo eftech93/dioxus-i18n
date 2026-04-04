@@ -145,7 +145,7 @@ Trans {
 
 ### `generate_keys!`
 
-Proc-macro that generates a `keys` module from a JSON locale file.
+Proc-macro (provided by `dioxus-i18n-json-macro` and re-exported by `dioxus-i18n-json`) that generates a `keys` module from a JSON locale file.
 
 ```rust
 dioxus_i18n_json::generate_keys!("locales/en.json");

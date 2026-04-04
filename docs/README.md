@@ -13,7 +13,7 @@
 - ♻️ **Hot reload** — Edit locale files while the desktop app runs and see changes instantly.
 - ⚡ **Reactive** — Locale changes trigger Dioxus signals, so the UI re-renders automatically.
 
-## What's New in 0.0.3
+## What's New in 0.0.4
 
 - **Robust `generate_keys!` macro** — The proc-macro now safely handles edge-case JSON keys, including special characters (`-`, `.`, spaces), duplicate identifiers, and empty/underscore-only keys.
 - **Fixed Docsify site** — Documentation now renders correctly on GitHub Pages with a styled coverpage.
@@ -50,15 +50,24 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = "0.0.3"
+dioxus-i18n-json = "0.0.4"
 ```
 
 For desktop hot-reload during development:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.0.3", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.4", features = ["hot-reload"] }
 ```
+
+## Workspace Crates
+
+This project is split into two crates so the proc-macro can be compiled separately:
+
+- **`dioxus-i18n-json`** — The main library with hooks, provider, and components.
+- **`dioxus-i18n-json-macro`** — The proc-macro crate that provides `generate_keys!`.
+
+See [Workspace Crates](crates.md) for details on when to depend on each one.
 
 ## Next Steps
 

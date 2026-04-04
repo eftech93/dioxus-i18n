@@ -1,5 +1,6 @@
 - [Home](/)
 - [Getting Started](getting-started.md)
+- [Workspace Crates](crates.md)
 - [API Reference](api.md)
 - [Plurals & Interpolation](plurals.md)
 - [Component Wrappers](trans.md)

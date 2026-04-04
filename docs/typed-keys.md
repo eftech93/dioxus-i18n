@@ -1,6 +1,6 @@
 # Typed Keys
 
-The `generate_keys!` proc-macro turns your JSON locale file into a Rust module full of string constants. This gives you **IDE autocomplete** and **compile-time validation**.
+The `generate_keys!` proc-macro (provided by the companion crate [`dioxus-i18n-json-macro`](https://crates.io/crates/dioxus-i18n-json-macro) and re-exported by `dioxus-i18n-json`) turns your JSON locale file into a Rust module full of string constants. This gives you **IDE autocomplete** and **compile-time validation**.
 
 ## Generating keys
 
