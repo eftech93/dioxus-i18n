@@ -42,7 +42,13 @@ impl I18n {
         let translations = self.translations.read();
         let locale = self.locale.read();
         let fallback = self.fallback_locale.read();
-        resolve_tp(&translations, locale.as_str(), fallback.as_deref(), key, count)
+        resolve_tp(
+            &translations,
+            locale.as_str(),
+            fallback.as_deref(),
+            key,
+            count,
+        )
     }
 
     /// Translate a key and interpolate named placeholders.
@@ -58,7 +64,13 @@ impl I18n {
         let translations = self.translations.read();
         let locale = self.locale.read();
         let fallback = self.fallback_locale.read();
-        resolve_tf(&translations, locale.as_str(), fallback.as_deref(), key, vars)
+        resolve_tf(
+            &translations,
+            locale.as_str(),
+            fallback.as_deref(),
+            key,
+            vars,
+        )
     }
 
     /// Switch the active locale.
@@ -404,7 +416,6 @@ mod hot_reload;
 mod tests {
     use super::*;
 
-
     #[test]
     fn test_interpolate() {
         assert_eq!(
@@ -481,36 +492,75 @@ mod tests {
     fn test_fallback_locale_t() {
         let mut translations = HashMap::new();
         let mut en = Translations::new();
-        en.insert("greeting".to_string(), TranslationValue::String("Hello".to_string()));
-        en.insert("missing_in_es".to_string(), TranslationValue::String("Fallback".to_string()));
+        en.insert(
+            "greeting".to_string(),
+            TranslationValue::String("Hello".to_string()),
+        );
+        en.insert(
+            "missing_in_es".to_string(),
+            TranslationValue::String("Fallback".to_string()),
+        );
 
         let mut es = Translations::new();
-        es.insert("greeting".to_string(), TranslationValue::String("Hola".to_string()));
+        es.insert(
+            "greeting".to_string(),
+            TranslationValue::String("Hola".to_string()),
+        );
 
         translations.insert("en".to_string(), en);
         translations.insert("es".to_string(), es);
 
-        assert_eq!(resolve_t(&translations, "es", Some("en"), "greeting"), "Hola");
-        assert_eq!(resolve_t(&translations, "es", Some("en"), "missing_in_es"), "Fallback");
-        assert_eq!(resolve_t(&translations, "es", Some("en"), "missing_everywhere"), "missing_everywhere");
+        assert_eq!(
+            resolve_t(&translations, "es", Some("en"), "greeting"),
+            "Hola"
+        );
+        assert_eq!(
+            resolve_t(&translations, "es", Some("en"), "missing_in_es"),
+            "Fallback"
+        );
+        assert_eq!(
+            resolve_t(&translations, "es", Some("en"), "missing_everywhere"),
+            "missing_everywhere"
+        );
         // no fallback configured
-        assert_eq!(resolve_t(&translations, "es", None, "missing_in_es"), "missing_in_es");
+        assert_eq!(
+            resolve_t(&translations, "es", None, "missing_in_es"),
+            "missing_in_es"
+        );
     }
 
     #[test]
     fn test_fallback_locale_tf() {
         let mut translations = HashMap::new();
         let mut en = Translations::new();
-        en.insert("hello".to_string(), TranslationValue::String("Hello, {name}".to_string()));
+        en.insert(
+            "hello".to_string(),
+            TranslationValue::String("Hello, {name}".to_string()),
+        );
 
         let mut es = Translations::new();
-        es.insert("greeting".to_string(), TranslationValue::String("Hola".to_string()));
+        es.insert(
+            "greeting".to_string(),
+            TranslationValue::String("Hola".to_string()),
+        );
 
         translations.insert("en".to_string(), en);
         translations.insert("es".to_string(), es);
 
-        assert_eq!(resolve_tf(&translations, "es", Some("en"), "hello", &[("name", "Alice")]), "Hello, Alice");
-        assert_eq!(resolve_tf(&translations, "es", Some("en"), "missing_everywhere", &[]), "missing_everywhere");
+        assert_eq!(
+            resolve_tf(
+                &translations,
+                "es",
+                Some("en"),
+                "hello",
+                &[("name", "Alice")]
+            ),
+            "Hello, Alice"
+        );
+        assert_eq!(
+            resolve_tf(&translations, "es", Some("en"), "missing_everywhere", &[]),
+            "missing_everywhere"
+        );
     }
 
     #[test]
@@ -527,8 +577,17 @@ mod tests {
         translations.insert("en".to_string(), en_map);
         translations.insert("es".to_string(), Translations::new());
 
-        assert_eq!(resolve_tp(&translations, "es", Some("en"), "itemCount", 1), "1 item");
-        assert_eq!(resolve_tp(&translations, "es", Some("en"), "itemCount", 5), "5 items");
-        assert_eq!(resolve_tp(&translations, "es", Some("en"), "missing_everywhere", 1), "missing_everywhere");
+        assert_eq!(
+            resolve_tp(&translations, "es", Some("en"), "itemCount", 1),
+            "1 item"
+        );
+        assert_eq!(
+            resolve_tp(&translations, "es", Some("en"), "itemCount", 5),
+            "5 items"
+        );
+        assert_eq!(
+            resolve_tp(&translations, "es", Some("en"), "missing_everywhere", 1),
+            "missing_everywhere"
+        );
     }
 }
