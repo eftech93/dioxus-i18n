@@ -11,7 +11,8 @@ fn main() {
 fn App() -> Element {
     rsx! {
         I18nProvider {
-            config: I18nConfig::new("examples/minimal-i18n/locales", "en"),
+            config: I18nConfig::new("examples/minimal-i18n/locales", "en")
+                .with_fallback_locale("en"),
             Hello {}
         }
     }

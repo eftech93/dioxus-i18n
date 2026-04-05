@@ -15,32 +15,21 @@ pub use loader::{parse_translation_json, PluralForms, TranslationValue, Translat
 #[derive(Clone, Copy)]
 pub struct I18n {
     locale: Signal<String>,
+    fallback_locale: Signal<Option<String>>,
     translations: Signal<HashMap<String, Translations>>,
 }
 
 impl I18n {
     /// Translate a key into the current locale.
     ///
-    /// If the key or locale is missing, the key itself is returned.
+    /// If the key or locale is missing, the fallback locale is tried.
+    /// If still missing, the key itself is returned.
     /// For plural values, the `other` fallback is returned.
     pub fn t(&self, key: &str) -> String {
-        let locale = self.locale.read();
         let translations = self.translations.read();
-        translations
-            .get(locale.as_str())
-            .and_then(|t| match t.get(key)? {
-                TranslationValue::String(s) => Some(s.clone()),
-                TranslationValue::Plural(pf) => pf.other.clone().or_else(|| {
-                    pf.one.clone().or_else(|| {
-                        pf.few.clone().or_else(|| {
-                            pf.many
-                                .clone()
-                                .or_else(|| pf.two.clone().or_else(|| pf.zero.clone()))
-                        })
-                    })
-                }),
-            })
-            .unwrap_or_else(|| key.to_string())
+        let locale = self.locale.read();
+        let fallback = self.fallback_locale.read();
+        resolve_t(&translations, locale.as_str(), fallback.as_deref(), key)
     }
 
     /// Translate a key with pluralization.
@@ -48,48 +37,28 @@ impl I18n {
     /// The translation file may contain a plural object (`one`, `other`, etc.).
     /// The correct form is selected using Unicode CLDR plural rules.
     /// The placeholder `{count}` is automatically replaced.
+    /// Falls back to the configured fallback locale if the key is missing.
     pub fn tp(&self, key: &str, count: i64) -> String {
-        let locale = self.locale.read();
         let translations = self.translations.read();
-        let value = translations.get(locale.as_str()).and_then(|t| t.get(key));
-
-        let template = match value {
-            Some(TranslationValue::String(s)) => Some(s.as_str()),
-            Some(TranslationValue::Plural(pf)) => {
-                let category = plural_category(locale.as_str(), count);
-                pf.get(category)
-            }
-            None => None,
-        };
-
-        match template {
-            Some(s) => interpolate(s, &[("count", &count.to_string())]),
-            None => key.to_string(),
-        }
+        let locale = self.locale.read();
+        let fallback = self.fallback_locale.read();
+        resolve_tp(&translations, locale.as_str(), fallback.as_deref(), key, count)
     }
 
     /// Translate a key and interpolate named placeholders.
     ///
     /// Placeholders in the template should be written as `{name}`.
+    /// Falls back to the configured fallback locale if the key is missing.
     ///
     /// # Example
     /// ```rust,ignore
     /// let greeting = i18n.tf("greeting", &[("name", "Alice")]);
     /// ```
     pub fn tf(&self, key: &str, vars: &[(&str, &str)]) -> String {
-        let locale = self.locale.read();
         let translations = self.translations.read();
-        let template = translations
-            .get(locale.as_str())
-            .and_then(|t| match t.get(key)? {
-                TranslationValue::String(s) => Some(s.as_str()),
-                TranslationValue::Plural(pf) => pf.other.as_deref(),
-            });
-
-        match template {
-            Some(s) => interpolate(s, vars),
-            None => key.to_string(),
-        }
+        let locale = self.locale.read();
+        let fallback = self.fallback_locale.read();
+        resolve_tf(&translations, locale.as_str(), fallback.as_deref(), key, vars)
     }
 
     /// Switch the active locale.
@@ -100,6 +69,11 @@ impl I18n {
     /// Get the current locale code.
     pub fn locale(&self) -> String {
         self.locale.read().clone()
+    }
+
+    /// Get the configured fallback locale code, if any.
+    pub fn fallback_locale(&self) -> Option<String> {
+        self.fallback_locale.read().clone()
     }
 
     /// Reload all translation files from disk.
@@ -115,6 +89,100 @@ impl I18n {
                 log::error!("Failed to reload translations: {}", e);
             }
         }
+    }
+}
+
+/// Pure helper: look up a raw translation value, trying fallback locale if configured.
+fn resolve_value<'a>(
+    translations: &'a HashMap<String, Translations>,
+    locale: &str,
+    fallback: Option<&str>,
+    key: &str,
+) -> Option<&'a TranslationValue> {
+    let value = translations.get(locale).and_then(|t| t.get(key));
+    if value.is_some() {
+        return value;
+    }
+    if let Some(fb) = fallback {
+        return translations.get(fb).and_then(|t| t.get(key));
+    }
+    None
+}
+
+/// Pure helper: translate a key, with fallback support.
+fn resolve_t(
+    translations: &HashMap<String, Translations>,
+    locale: &str,
+    fallback: Option<&str>,
+    key: &str,
+) -> String {
+    match resolve_value(translations, locale, fallback, key) {
+        Some(TranslationValue::String(s)) => s.clone(),
+        Some(TranslationValue::Plural(pf)) => pf
+            .other
+            .clone()
+            .or_else(|| {
+                pf.one.clone().or_else(|| {
+                    pf.few.clone().or_else(|| {
+                        pf.many
+                            .clone()
+                            .or_else(|| pf.two.clone().or_else(|| pf.zero.clone()))
+                    })
+                })
+            })
+            .unwrap_or_else(|| key.to_string()),
+        None => key.to_string(),
+    }
+}
+
+/// Pure helper: translate a key with pluralization, with fallback support.
+fn resolve_tp(
+    translations: &HashMap<String, Translations>,
+    locale: &str,
+    fallback: Option<&str>,
+    key: &str,
+    count: i64,
+) -> String {
+    let value = resolve_value(translations, locale, fallback, key);
+
+    let template = match value {
+        Some(TranslationValue::String(s)) => Some(s.as_str()),
+        Some(TranslationValue::Plural(pf)) => {
+            // For fallback plurals, use the locale that actually provided the value
+            let resolved_locale = if translations.get(locale).and_then(|t| t.get(key)).is_some() {
+                locale
+            } else {
+                fallback.unwrap_or(locale)
+            };
+            let category = plural_category(resolved_locale, count);
+            pf.get(category)
+        }
+        None => None,
+    };
+
+    match template {
+        Some(s) => interpolate(s, &[("count", &count.to_string())]),
+        None => key.to_string(),
+    }
+}
+
+/// Pure helper: translate a key with interpolation, with fallback support.
+fn resolve_tf(
+    translations: &HashMap<String, Translations>,
+    locale: &str,
+    fallback: Option<&str>,
+    key: &str,
+    vars: &[(&str, &str)],
+) -> String {
+    let template = match resolve_value(translations, locale, fallback, key) {
+        Some(TranslationValue::String(s)) => Some(s.as_str()),
+        Some(TranslationValue::Plural(pf)) => pf.other.as_deref(),
+        None => None,
+    };
+
+    match template {
+        Some(s) => interpolate(s, vars),
+        None => key.to_string(),
     }
 }
 
@@ -171,10 +239,12 @@ pub fn I18nProvider(children: Element, config: I18nConfig) -> Element {
         .or_else(|| loader::load_translations(&config.locales_dir).ok())
         .unwrap_or_default();
     let locale = use_signal(|| config.default_locale.clone());
+    let fallback_locale = use_signal(|| config.fallback_locale.clone());
     let translations = use_signal(|| initial);
 
     let i18n = I18n {
         locale,
+        fallback_locale,
         translations,
     };
     use_context_provider(|| i18n);
@@ -334,6 +404,7 @@ mod hot_reload;
 mod tests {
     use super::*;
 
+
     #[test]
     fn test_interpolate() {
         assert_eq!(
@@ -395,12 +466,69 @@ mod tests {
 
     #[test]
     fn test_plural_forms_get() {
-        let mut pf = PluralForms::default();
-        pf.one = Some("one item".to_string());
-        pf.other = Some("{count} items".to_string());
+        let pf = PluralForms {
+            one: Some("one item".to_string()),
+            other: Some("{count} items".to_string()),
+            ..Default::default()
+        };
 
         assert_eq!(pf.get("one"), Some("one item"));
         assert_eq!(pf.get("other"), Some("{count} items"));
         assert_eq!(pf.get("few"), Some("{count} items")); // falls back to other
+    }
+
+    #[test]
+    fn test_fallback_locale_t() {
+        let mut translations = HashMap::new();
+        let mut en = Translations::new();
+        en.insert("greeting".to_string(), TranslationValue::String("Hello".to_string()));
+        en.insert("missing_in_es".to_string(), TranslationValue::String("Fallback".to_string()));
+
+        let mut es = Translations::new();
+        es.insert("greeting".to_string(), TranslationValue::String("Hola".to_string()));
+
+        translations.insert("en".to_string(), en);
+        translations.insert("es".to_string(), es);
+
+        assert_eq!(resolve_t(&translations, "es", Some("en"), "greeting"), "Hola");
+        assert_eq!(resolve_t(&translations, "es", Some("en"), "missing_in_es"), "Fallback");
+        assert_eq!(resolve_t(&translations, "es", Some("en"), "missing_everywhere"), "missing_everywhere");
+        // no fallback configured
+        assert_eq!(resolve_t(&translations, "es", None, "missing_in_es"), "missing_in_es");
+    }
+
+    #[test]
+    fn test_fallback_locale_tf() {
+        let mut translations = HashMap::new();
+        let mut en = Translations::new();
+        en.insert("hello".to_string(), TranslationValue::String("Hello, {name}".to_string()));
+
+        let mut es = Translations::new();
+        es.insert("greeting".to_string(), TranslationValue::String("Hola".to_string()));
+
+        translations.insert("en".to_string(), en);
+        translations.insert("es".to_string(), es);
+
+        assert_eq!(resolve_tf(&translations, "es", Some("en"), "hello", &[("name", "Alice")]), "Hello, Alice");
+        assert_eq!(resolve_tf(&translations, "es", Some("en"), "missing_everywhere", &[]), "missing_everywhere");
+    }
+
+    #[test]
+    fn test_fallback_locale_tp() {
+        let mut translations = HashMap::new();
+        let en = PluralForms {
+            one: Some("1 item".to_string()),
+            other: Some("{count} items".to_string()),
+            ..Default::default()
+        };
+        let mut en_map = Translations::new();
+        en_map.insert("itemCount".to_string(), TranslationValue::Plural(en));
+
+        translations.insert("en".to_string(), en_map);
+        translations.insert("es".to_string(), Translations::new());
+
+        assert_eq!(resolve_tp(&translations, "es", Some("en"), "itemCount", 1), "1 item");
+        assert_eq!(resolve_tp(&translations, "es", Some("en"), "itemCount", 5), "5 items");
+        assert_eq!(resolve_tp(&translations, "es", Some("en"), "missing_everywhere", 1), "missing_everywhere");
     }
 }

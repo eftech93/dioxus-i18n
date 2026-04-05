@@ -12,6 +12,7 @@ A lightweight internationalization (i18n) library for [Dioxus](https://dioxuslab
 - 📝 **String interpolation** – Inject variables with `{name}` placeholders.
 - 🧩 **Component wrappers** – `<Trans>` lets you embed Dioxus components inside translations.
 - ⌨️ **Typed keys / autocomplete** – `generate_keys!` macro turns your JSON into a typed `keys` module.
+- 🛡️ **Fallback locale** – Missing keys automatically fall back to a secondary locale before returning the raw key.
 - ♻️ **Hot reload** – Edit locale files while the desktop app is running (enabled via the `hot-reload` feature).
 - ⚡ **Reactive** – Locale changes trigger Dioxus signal updates automatically.
 
@@ -21,14 +22,14 @@ A lightweight internationalization (i18n) library for [Dioxus](https://dioxuslab
 
 ```toml
 [dependencies]
-dioxus-i18n-json = "0.0.4"
+dioxus-i18n-json = "0.0.5"
 ```
 
 For desktop hot-reload:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.0.4", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.5", features = ["hot-reload"] }
 ```
 
 ### 2. Create a locale file
