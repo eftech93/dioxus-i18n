@@ -2,7 +2,7 @@
 
 > **A lightweight, reactive internationalization library for Dioxus.**
 > 
-> v0.0.4
+> v0.0.5
 
 - 🌍 JSON-based translations
 - 🔢 CLDR plurals & string interpolation

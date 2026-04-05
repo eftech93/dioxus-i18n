@@ -7,14 +7,14 @@ This guide walks you through adding `dioxus-i18n-json` to a new or existing Diox
 ```toml
 [dependencies]
 dioxus = "0.6"
-dioxus-i18n-json = "0.0.4"
+dioxus-i18n-json = "0.0.5"
 ```
 
 If you want hot-reload on desktop:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.0.4", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.5", features = ["hot-reload"] }
 ```
 
 ## 2. Create locale files
@@ -52,14 +52,15 @@ use dioxus_i18n_json::{I18nConfig, I18nProvider};
 fn App() -> Element {
     rsx! {
         I18nProvider {
-            config: I18nConfig::new("./locales", "en"),
+            config: I18nConfig::new("./locales", "en")
+                .with_fallback_locale("en"),
             AppContent {}
         }
     }
 }
 ```
 
-`I18nConfig::new(locales_dir, default_locale)` tells the library where to find JSON files and which locale to start with.
+`I18nConfig::new(locales_dir, default_locale)` tells the library where to find JSON files and which locale to start with. The optional `with_fallback_locale` ensures missing keys in the active locale are looked up in the fallback before returning the raw key.
 
 ## 4. Translate in components
 

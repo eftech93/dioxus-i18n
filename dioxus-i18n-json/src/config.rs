@@ -11,6 +11,8 @@ pub struct I18nConfig {
     pub locales_dir: PathBuf,
     /// Default locale code to use before the user selects one.
     pub default_locale: String,
+    /// Optional locale to fall back to when a key is missing in the active locale.
+    pub fallback_locale: Option<String>,
     /// Optional pre-loaded translations.
     /// Useful for embedding JSON files at compile time with `include_str!`.
     pub initial: Option<HashMap<String, Translations>>,
@@ -22,8 +24,21 @@ impl I18nConfig {
         Self {
             locales_dir: locales_dir.into(),
             default_locale: default_locale.into(),
+            fallback_locale: None,
             initial: None,
         }
+    }
+
+    /// Set a fallback locale for missing keys.
+    ///
+    /// # Example
+    /// ```rust,ignore
+    /// let config = I18nConfig::new("./locales", "es")
+    ///     .with_fallback_locale("en");
+    /// ```
+    pub fn with_fallback_locale(mut self, locale: impl Into<String>) -> Self {
+        self.fallback_locale = Some(locale.into());
+        self
     }
 
     /// Create a new config with pre-loaded translations.
@@ -41,6 +56,7 @@ impl I18nConfig {
         Self {
             locales_dir: PathBuf::new(),
             default_locale: default_locale.into(),
+            fallback_locale: None,
             initial: Some(translations),
         }
     }

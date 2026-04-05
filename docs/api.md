@@ -10,6 +10,7 @@ Configuration for the i18n provider.
 pub struct I18nConfig {
     pub locales_dir: PathBuf,
     pub default_locale: String,
+    pub fallback_locale: Option<String>,
     pub initial: Option<HashMap<String, Translations>>,
 }
 ```
@@ -18,6 +19,10 @@ pub struct I18nConfig {
 
 - `I18nConfig::new(locales_dir, default_locale)` — loads JSON files from disk.
 - `I18nConfig::embedded(default_locale, translations)` — uses pre-loaded translations (great for WASM).
+
+#### Builder
+
+- `I18nConfig::with_fallback_locale(locale)` — sets a fallback locale for missing keys.
 
 ---
 
@@ -58,6 +63,7 @@ Methods:
 - `tf(&self, key: &str, vars: &[(&str, &str)]) -> String` — formatted lookup with `{name}` placeholders.
 - `set_locale(&mut self, locale: &str)` — change the active locale.
 - `locale(&self) -> String` — get the current locale code.
+- `fallback_locale(&self) -> Option<String>` — get the configured fallback locale.
 
 ---
 

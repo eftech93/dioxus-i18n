@@ -10,10 +10,11 @@
 - 📝 **String interpolation** — Inject variables with `{name}` placeholders.
 - 🧩 **Component wrappers** — `<Trans>` lets you embed Dioxus components inside translations.
 - ⌨️ **Typed keys** — `generate_keys!` macro gives you IDE autocomplete and compile-time validation.
+- 🛡️ **Fallback locale** — Missing keys automatically fall back to a secondary locale before returning the raw key.
 - ♻️ **Hot reload** — Edit locale files while the desktop app runs and see changes instantly.
 - ⚡ **Reactive** — Locale changes trigger Dioxus signals, so the UI re-renders automatically.
 
-## What's New in 0.0.4
+## What's New in 0.0.5
 
 - **Robust `generate_keys!` macro** — The proc-macro now safely handles edge-case JSON keys, including special characters (`-`, `.`, spaces), duplicate identifiers, and empty/underscore-only keys.
 - **Fixed Docsify site** — Documentation now renders correctly on GitHub Pages with a styled coverpage.
@@ -50,14 +51,14 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = "0.0.4"
+dioxus-i18n-json = "0.0.5"
 ```
 
 For desktop hot-reload during development:
 
 ```toml
 [dependencies]
-dioxus-i18n-json = { version = "0.0.4", features = ["hot-reload"] }
+dioxus-i18n-json = { version = "0.0.5", features = ["hot-reload"] }
 ```
 
 ## Workspace Crates

@@ -10,7 +10,7 @@ The **main library** that you add to your `Cargo.toml`.
 
 ```toml
 [dependencies]
-dioxus-i18n-json = "0.0.4"
+dioxus-i18n-json = "0.0.5"
 ```
 
 ### What it provides
@@ -37,7 +37,7 @@ The **proc-macro companion crate** that powers `generate_keys!`.
 
 ```toml
 [dependencies]
-dioxus-i18n-json-macro = "0.0.4"
+dioxus-i18n-json-macro = "0.0.5"
 ```
 
 > **You usually do not need this directly.** It is re-exported by `dioxus-i18n-json`.
