@@ -15,6 +15,10 @@ edition = "2021"
 authors = ["Esteban Puello <eftech93@gmail.com>"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/eftech93/dioxus-i18n"
+homepage = "https://github.com/eftech93/dioxus-i18n"
 documentation = "https://eftech93.github.io/dioxus-i18n"
+keywords = ["dioxus", "rust", "i18n", "localization", "wasm", "internationalization", "proc-macro"]
+categories = ["wasm", "gui", "web-programming", "internationalization", "localization"]
+rust-version = "1.76"
 
 [workspace.dependencies]

@@ -1,5 +1,7 @@
 # dioxus-i18n-json
 
+![Tests](https://github.com/eftech93/dioxus-i18n/actions/workflows/ci.yml/badge.svg)
+
 A lightweight internationalization (i18n) library for [Dioxus](https://dioxuslabs.com/)
 with JSON-based translations, hot-reload, typed keys, and component wrappers.
 
