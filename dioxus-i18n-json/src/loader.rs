@@ -32,7 +32,7 @@ impl PluralForms {
             "other" => self.other.as_deref(),
             _ => None,
         };
-        form.or_else(|| self.other.as_deref())
+        form.or(self.other.as_deref())
     }
 }
 

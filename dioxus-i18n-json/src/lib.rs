@@ -202,7 +202,7 @@ fn plural_category(locale: &str, count: i64) -> &'static str {
     use icu_locale::Locale;
     use icu_plurals::{PluralCategory, PluralRuleType, PluralRules};
 
-    let loc: Locale = locale.parse().unwrap_or_else(|_| icu_locale::locale!("en"));
+    let loc: Locale = locale.parse().unwrap_or(icu_locale::locale!("en"));
     let rules =
         PluralRules::try_new(loc.into(), PluralRuleType::Cardinal.into()).unwrap_or_else(|_| {
             PluralRules::try_new(
@@ -314,6 +314,7 @@ where
 /// let UseI18n { t, tp, tf } = use_t();
 /// let welcome = t("messages.welcome");
 /// ```
+#[allow(clippy::type_complexity)]
 pub fn use_t() -> UseI18n<
     impl Fn(&str) -> String + Copy,
     impl Fn(&str, i64) -> String + Copy,
@@ -336,6 +337,7 @@ pub fn use_t() -> UseI18n<
 /// let UseI18n { t, tp, tf } = use_t_ns("messages");
 /// let welcome = t("welcome"); // resolves to "messages.welcome"
 /// ```
+#[allow(clippy::type_complexity)]
 pub fn use_t_ns(
     ns: &'static str,
 ) -> UseI18n<

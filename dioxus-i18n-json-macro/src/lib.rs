@@ -57,11 +57,7 @@ fn is_plural_object(obj: &serde_json::Map<String, serde_json::Value>) -> bool {
     })
 }
 
-fn generate_value(
-    value: &serde_json::Value,
-    name: &str,
-    prefix: &str,
-) -> proc_macro2::TokenStream {
+fn generate_value(value: &serde_json::Value, name: &str, prefix: &str) -> proc_macro2::TokenStream {
     match value {
         serde_json::Value::Object(obj) => {
             if is_plural_object(obj) {
