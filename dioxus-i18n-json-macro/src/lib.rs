@@ -38,7 +38,7 @@ pub fn generate_keys(input: TokenStream) -> TokenStream {
         }
     };
 
-    let keys_module = generate_value(&value, "keys", "", &mut HashSet::new());
+    let keys_module = generate_value(&value, "keys", "");
     quote! {
         #keys_module
     }
@@ -61,7 +61,6 @@ fn generate_value(
     value: &serde_json::Value,
     name: &str,
     prefix: &str,
-    used: &mut HashSet<String>,
 ) -> proc_macro2::TokenStream {
     match value {
         serde_json::Value::Object(obj) => {
@@ -90,7 +89,7 @@ fn generate_value(
                         quote! { pub const #const_ident: &str = #full_key; }
                     } else if v.is_object() || v.is_array() {
                         let unique = unique_ident(&mut local_used, &sanitized);
-                        generate_value(v, &unique, &full_key, used)
+                        generate_value(v, &unique, &full_key)
                     } else {
                         let unique = unique_ident(&mut local_used, &sanitized);
                         let const_ident = safe_ident(&unique);
@@ -119,7 +118,7 @@ fn generate_value(
                         quote! { pub const #const_ident: &str = #full_key; }
                     } else if v.is_object() || v.is_array() {
                         let unique = unique_ident(&mut local_used, &idx_name);
-                        generate_value(v, &unique, &full_key, used)
+                        generate_value(v, &unique, &full_key)
                     } else {
                         let unique = unique_ident(&mut local_used, &idx_name);
                         let const_ident = safe_ident(&unique);
